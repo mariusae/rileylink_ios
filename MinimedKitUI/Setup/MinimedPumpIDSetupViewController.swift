@@ -270,7 +270,8 @@ class MinimedPumpIDSetupViewController: SetupTableViewController {
                     if remoteIDCount == 0 {
                         try session.setRemoteControlID(Data(bytes: [9, 9, 9, 9, 9, 9]), atIndex: 2)
                     }
-                    
+                    self.log.error("Trying to set remote control enabled")
+
                     do {
                         try session.setRemoteControlEnabled(true)
                     } catch let PumpOpsError.couldNotDecode(data, message) {
