@@ -10,9 +10,12 @@ import LoopKit
 import LoopKitUI
 import MinimedKit
 import RileyLinkKit
+import os.log
 
 
 class MinimedPumpIDSetupViewController: SetupTableViewController {
+    
+    let log = OSLog(category: "MinimedPumpIDSetupViewController")
 
     var rileyLinkPumpManager: RileyLinkPumpManager!
 
@@ -267,8 +270,16 @@ class MinimedPumpIDSetupViewController: SetupTableViewController {
                     if remoteIDCount == 0 {
                         try session.setRemoteControlID(Data(bytes: [9, 9, 9, 9, 9, 9]), atIndex: 2)
                     }
-
-                    try session.setRemoteControlEnabled(true)
+                    
+                    do {
+                        try session.setRemoteControlEnabled(true)
+                    } catch let PumpOpsError.couldNotDecode(data, message) {
+                        // Is there no way in Swift to capture the full pattern?
+                        let error = PumpOpsError.couldNotDecode(rx: data, during: message)
+                        self.log.error("Failed to decode setRemoteControlEnabled response: %{public}@: ignoring",
+                                       String(describing: error))
+                        
+                    }
                 }
 
                 // Settings
