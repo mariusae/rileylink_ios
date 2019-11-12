@@ -280,6 +280,8 @@ class MinimedPumpIDSetupViewController: SetupTableViewController {
                         self.log.error("Failed to decode setRemoteControlEnabled response: %{public}@: ignoring",
                                        String(describing: error))
                         
+                    } catch let error {
+                        self.log.error("ignoring unknown error %{public}@", String(describing: error))
                     }
                 }
 
